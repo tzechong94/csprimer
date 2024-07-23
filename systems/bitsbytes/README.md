@@ -85,3 +85,30 @@ are there just positive integers or are negative integers there too?
 
 - eg signed scheme called two's complement
 - 1111 is -1, think of it like -8 + 7, etc etc
+
+### What is standard in and standard out
+
+### canonical mode on terminal 
+
+- wait till enter is pressed before input is sent to program
+  
+### flush a buffer
+
+taking things off a buffer and putting it to wherever you want it to go. pushing things out of the buffer.
+
+### file descriptor
+
+- is our interface to the operating system specify which open file or file like thing we care about or working with.
+
+Unix family operating systems use file descriptors 0, 1 and 2 to refer to standard in, standard out and standard error respectively, so that programs can be easily read from and write to a terminal interface, and be made to connect with one another via pipes.
+
+0: stdin
+1: stdout
+2: stderr
+
+eg.
+curl -v example.com > /tmp/example -> write content to file, show verbose on terminal
+curl -v example.com 2 > /tmp/example -> write verbose to file, show content on terminal
+
+1 hexadecimal = 4 bits
+1 byte = 8 bits = 2 hexadecimal

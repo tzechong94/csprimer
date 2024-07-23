@@ -35,46 +35,40 @@ def hex_to_rgb(filepath):
         - 3 digits => eg 123 => 112233, 0ab => 00aabb
         - 4 digits => similar to 3 digits. every digit repeats itself
     """
-    csslines = []
 
     def pair_conversion(hex_code):
         return HEX_TABLE[hex_code[0]] * 16 + HEX_TABLE[hex_code[1]]
 
-    def convert_6_digit(hexstring):
+    def return_rbg_string(hexstring):
         converted_red = pair_conversion(hexstring[0:2])
         converted_green = pair_conversion(hexstring[2:4])
         converted_blue = pair_conversion(hexstring[4:6])
-        return f"rgb({converted_red} {converted_green} {converted_blue})"
-
-    def convert_8_digit(hexstring):
-        converted_red = pair_conversion(hexstring[0:2])
-        converted_green = pair_conversion(hexstring[2:4])
-        converted_blue = pair_conversion(hexstring[4:6])
-        converted_alpha = int(pair_conversion(hexstring[6:8])) / 255
-        return f"rgba({converted_red} {converted_green} {converted_blue} / {converted_alpha:.5f})"
+        if len(hexstring) == 6:
+            return f"rgb({converted_red} {converted_green} {converted_blue})"
+        if len(hexstring) == 8:
+            converted_alpha = int(pair_conversion(hexstring[6:8])) / 255
+            return f"rgba({converted_red} {converted_green} {converted_blue} / {converted_alpha:.5f})"
 
     def convert(hex_code):
-        hexstring = hex_code[1:]
-        if len(hexstring) == 6:
-            return convert_6_digit(hexstring)
-        elif len(hexstring) == 3:
-            newhexstring = hexstring[0] * 2 + hexstring[1] * 2 + hexstring[2] * 2
-            return convert_6_digit(newhexstring)
-        elif len(hexstring) == 8:
-            return convert_8_digit(hexstring)
-        elif len(hexstring) == 4:
+        newhexstring = hex_code[1:]
+        if len(newhexstring) == 3:
             newhexstring = (
-                hexstring[0] * 2
-                + hexstring[1] * 2
-                + hexstring[2] * 2
-                + hexstring[3] * 2
+                newhexstring[0] * 2 + newhexstring[1] * 2 + newhexstring[2] * 2
             )
-            return convert_8_digit(newhexstring)
+            return_rbg_string(newhexstring)
+        elif len(newhexstring) == 4:
+            newhexstring = (
+                newhexstring[0] * 2
+                + newhexstring[1] * 2
+                + newhexstring[2] * 2
+                + newhexstring[3] * 2
+            )
+            return_rbg_string(newhexstring)
+
+        elif len(newhexstring) == 6 or 8:
+            return_rbg_string(newhexstring)
         else:
             return hex_code
-
-        # if 8 digit, return rgba
-        # if 4 figits, duplicate each and use 8 digit logic
 
     with open(filepath, "r") as file:
         lines = file.readlines()
@@ -91,8 +85,6 @@ def hex_to_rgb(filepath):
             new_rgb_code = convert(color_code.lower())
             modified_line = line.replace(color_code, new_rgb_code)
             modified_lines.append(modified_line)
-        # modified_line = line.replace(color_code, new_rgb_code)
-        # print(new_rgb_code, " rbg code")
 
     with open(filepath, "w") as file:
         file.writelines(modified_lines)
