@@ -149,3 +149,54 @@ used to identify a file, block of bytes at the start of the file. read this to e
 - 08 offset, 2 bytes: reserved actual value depends on the application that creates the image, if created manually can be 0
 - 0A offset (10), 4 bytes: the offset, starting address, of the byte where the bitmap image data (pixel array can be found)
 
+## Network protocol intro
+
+TCP - transmission control protocol 
+
+- TCP connection -> 3 way handshake.
+- syn -> syn/ack -> ack
+- sy flood: if attacker wants to send syn messages, server will send ack back, but if the attacker doesnt reply with the 3rd ack message, lots of server will be half opened.
+
+### SYN Flood
+
+syn flood is a form of dos attack on data communications in which an attacker rapidly initiates a connection to a server without finalizing the connection. server has to spend resources waiting for half opened connections, which can consume enough resources to make the system unresponsive to legitimate traffic
+
+attacker sends a syn packet, part of TCPs three way handshake used to established a connection
+
+#### details
+
+1. client requests connection by sending a syn messge to server
+2. server acknowledges this by sending syn-ack back to client
+3. client responds with an ack, connection established
+
+- not responding with the final ACK code, malicious client can either simply not send the expected ACK, or by spoofing the IP adress in the syn, causing the server to send syn-ack to a falsified IP address, which will not send an ACK because it doesn't know
+
+- half open connections take up resources and server cannot connect to legit clients, or crash
+
+#### Countermeasures
+
+- filtering
+- increasing backlog
+- reducing syn-received timer
+- recycling oldest half open TCP
+- syn cache
+- syn cookies
+- hybrid approaches
+- firewalls and proxies
+
+#### PCAP File format
+
+- pcap header
+- per packet pcap header
+- link layer header
+- ip header
+- tcp header
+- 
+
+1. Pcap header to confirm version #. parse magic number
+
+
+#### Localhost -> loopback interface
+
+- work with virtual network interface locally that is very similar to sending something out of the physical network, but instead all it does is reflects back from inside of the operating system's TCP/IP. 
+- message is addressed to localhost as hostname or the IP address, goes into network of OS, not going out through a network card, just mimicking a real network
