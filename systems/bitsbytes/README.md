@@ -112,3 +112,40 @@ curl -v example.com 2 > /tmp/example -> write verbose to file, show content on t
 
 1 hexadecimal = 4 bits
 1 byte = 8 bits = 2 hexadecimal
+
+
+## BMP file format
+
+- used to store bitmap digital images independently of the display devices
+- capable of storing 2D digital images in various color depths, optionally with data compression, alpha channels and color profiles
+
+a device independent bitmap (DIB) is a format used to define device-independent bitmaps in various color resolutions. The main purpose of DIBs is to allow bitmaps to be moved from one device to another. DIB is an external format, in contrast to a device dependent bitmap, which appears in the system as a bitmap object created by an application.
+
+DIB is normally transported in metafiles, BMP files, and clipboard
+
+#### File structure
+
+- bitmap file header, mandatory, store general info
+- DIB header, mandatory, store detailed info and define pixel format
+- extra bit masks, optional, to define pixel format, present only in case DIB header is the BITMAPINFOHEADER and compression method member is set to either BI_BITFIELDS or BI_ALPHABITFIELDS
+- color table, semi optional, define colors used by bitmap image data, mandatory for color depths <= 8 bits
+- Gap1, optional, structure alignment, an artifact of file offset to pixel array in the bitmap file header
+- pixel array, mandatory, define the actual values of the pixels, pixel format is defined by DIB header or extra bit masks, each row in the pixel array is padded to a multiple of 4 bytes in size
+- gap2, optional, for structure alignment, artifact of icc profile data offset field in the dib header
+- icc color profile, optional, define color profile for color management, can also contain a path to an external file containing the color profile, when loaded in memory as non packed DIB, it is located between color table and gap1
+
+#### DIBs in memory
+
+when loaded into memory, bitmap image file becomes dib data structure. does not contain 14-byte bitmap file header and begins with the DIB header.
+pixel array must begin at memory address that is a multiple of 4 bytes. 
+
+#### bitmap file header
+
+used to identify a file, block of bytes at the start of the file. read this to ensure that the file is actually a BMP and it is not damaged. the first 2 bytes of the BMP file format are the character B and then the character M in ASCII encoding. all the integer values are stored in little-endian format. (least significant byte first)
+
+- 00 offset, 2 bytes: BM in ASCII. 0X42 0X4D
+- 02 offset, 4 bytes: the size of BMP file in bytes
+- 06 offset, 2 bytes: reserved: actual value depends on application that created the image, if created manually can be 0
+- 08 offset, 2 bytes: reserved actual value depends on the application that creates the image, if created manually can be 0
+- 0A offset (10), 4 bytes: the offset, starting address, of the byte where the bitmap image data (pixel array can be found)
+
