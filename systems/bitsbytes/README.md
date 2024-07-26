@@ -200,3 +200,4 @@ attacker sends a syn packet, part of TCPs three way handshake used to establishe
 
 - work with virtual network interface locally that is very similar to sending something out of the physical network, but instead all it does is reflects back from inside of the operating system's TCP/IP. 
 - message is addressed to localhost as hostname or the IP address, goes into network of OS, not going out through a network card, just mimicking a real network
+
