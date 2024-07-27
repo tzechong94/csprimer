@@ -201,3 +201,32 @@ attacker sends a syn packet, part of TCPs three way handshake used to establishe
 - work with virtual network interface locally that is very similar to sending something out of the physical network, but instead all it does is reflects back from inside of the operating system's TCP/IP. 
 - message is addressed to localhost as hostname or the IP address, goes into network of OS, not going out through a network card, just mimicking a real network
 
+### continuation bits of a UTF-8 symbol
+
+-> 10xxxxxx is the continuation bit. Variable length characters exist, and the first byte tells you how many bytes there are. 11100000, 11110000, etc
+
+### what is the point of floating point?
+
+_._
+a x 10^b = huge range but not precise 0-9b
+
+### IEEE-754 floats
+
+- sign, exponent, fraction
+- exponent can be negative. n + 127.
+- 
+
+#### subnormal numbers
+
+why shouldn't you use floating point for currency?
+
+- not precise
+- use integer (like cents)
+
+nan in ieee754: s111 1111 1xxx xxxx xxxx xxxx xxxx xxxx
+
+double precision -> 64 bit
+
+sign bit (1bit), exponent bit (all has to be on, 11 bit), fraction (52 bit)
+
+>>> struct.unpack('>f', bytes([0b00111101,0b11001100,0b11100000,0x00]))[0]
