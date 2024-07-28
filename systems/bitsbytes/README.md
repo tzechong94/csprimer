@@ -230,3 +230,24 @@ double precision -> 64 bit
 sign bit (1bit), exponent bit (all has to be on, 11 bit), fraction (52 bit)
 
 >>> struct.unpack('>f', bytes([0b00111101,0b11001100,0b11100000,0x00]))[0]
+
+## Semminar 1: Unsigned integers, alternatives, and overflow
+
+- integer overflow -> let to aerospace accidents, banking bugs etc (posgre transation ID overflow. 32 bit integer)
+
+- bit flip, eg spacecraft affected by cosmic radiation. check for error. 2 out of 5 code.
+- binary coded decimal
+- https://en.wikipedia.org/wiki/Gray_code
+- https://github.com/danluu/post-mortems 
+- karatsuba -> kolmogorov says o(n^2) multiplication. karatsuba discovered a faster algorithm. divide and conquer algorithm.
+- https://en.wikipedia.org/wiki/Karatsuba_algorithm
+
+## Seminar 2: Signed integers, integers in JS and ones' complement Internet checksum
+
+
+
+
+## Seminar 3: Floating point, IEEE 754 structure, and safe integers floats in JS
+
+
+## Seminar 4: Unicode, UTF-8, UTF-32, and UTF-16
