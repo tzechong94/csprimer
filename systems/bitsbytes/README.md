@@ -244,7 +244,14 @@ sign bit (1bit), exponent bit (all has to be on, 11 bit), fraction (52 bit)
 
 ## Seminar 2: Signed integers, integers in JS and ones' complement Internet checksum
 
+- ones' complement: flip all the bits to get negative, carry on -> wraparound. 
+- << and >> is arithmetic shift. the sign bit remains
+- <<< and >>> is logical shift. doesnt preserve the sign bit
 
+- internet checksum
+1. adjacent octets to be checksummed are paired to form 16 bit integers, and the 1's complement sum of these 16 bit integers is formed
+2. to generate a checksum, the checksum field itself is cleared, the 16 bit 1's complement sum is computed over the octets concerns, and the 1's complement of this sum is placed in the checksum field
+3. to check a checksum, the 1s complement sum is computed over the same set of octets, incuding checksum field. if the result is all 1 bits, check succceeds. 
 
 
 ## Seminar 3: Floating point, IEEE 754 structure, and safe integers floats in JS
