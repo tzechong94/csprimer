@@ -62,3 +62,11 @@ https://learnxinyminutes.com/docs/c/
 ## what does it mean for a value to be a certain number of bits?
 
 number of bits given to store a value. if not considered, will lead to overflow.
+
+### what is a register
+
+memory that resides on the CPU that stores values that are going to be operated over
+
+register access being extremely fast fraction of a nanosecond compared to tens or thousands of nanoseconds of RAM. having a constraint number of register, and it has a specific width, 64 in this case.
+
+The malloc() function allocates memory and leaves the memory uninitialized, whereas the calloc() function allocates memory and initializes all bits to zero.
