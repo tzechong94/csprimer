@@ -127,4 +127,73 @@ optimization level flag
 ### brief overview of structs in C. 
 
 - something like objects without methods.
+
+
+### basic hashmap
+
+- "foo" -> hash uint 32 -> collapse down to some number of buckets -> 3
+- have a finite number of buckets (eg 8), index 3 -> foo = 5.
+- "bar" = 42 can be hashed to the same bucket too. collisions resolution -> chaining and open addressing
+- chaining -> at each bucket location, instead of storing one thing, store the start of a linked list.
+- open addressing -> as chains get longer, inefficient to traverse linked lists -> memory hierarchy -> cache miss.
+- most hash table designs employ an imperfect hash fuction. Hash collision, where hash function enerates the same index for more than one key, therefore typically must be accommodated in some way.
+- in a well-dimensioned hash table, the average time complexity for each lookup is independent of the number of elements stored in the table. 
+- many hash table designs also allow arbitrary insertions and deletions of key value pairs, at amortized constant average cost per operation.
+- Hashing is an example of space-time tradeoff. 
+  - if memory infinite, the entire key can be used directly as an index to locate its value with a single memory access.
+  - if infinite time is available, values can be stored without regard for their keys, and a binary search or linear search can be used to retrieve element.
+
+#### Overview
+
+an associative array stores a set of (key, value) pairs and allows insertion, deletion and lookup, with the constraint of unique keys.
+
+- an array A of length m is partially filled with n elements, where m >= n.
+- a value x gets stored at an index location A[h(x)], where h is a hash function, and h(x) < m.
+
+### Hash function
+
+- maps the universe U of keys to indices or slots withint the table, that is h(x) in 0, 1,... m-1 for x in U. Bit length of u is confined within the word size of a computer architecture.
+- Hash function h is said to be perfect for a given set S if each element x in S maps to a different value. Can be created if all keys are known ahead of time.
+
+### Hashing schemes
+
+1. by division (most commonly used)
+
+   - h(x) = x mod m, where M is the hash digest of x and m is the size of the table.
+  
+2. by multiplication
+
+   - h(x) = m ((MA)) mod 1, where A is a real valued constant and m is the size of the table. use golden ratio although any A produces the hash function.
+
+### Load factor
+
+- load factor (a) = n / m, where n is the number of entries occupied in the hash table, and m is the number of buckets.
+- high load factor leads to deterioration of performance of the hash table.
+- with separate chaining hash tables, each slot of the bucket array stores a pointer to a list or array of data.
+- value of a,max that gives best performance is typically between 1 and 3.
 - 
+
+### Choosing hash function
+
+- uniform distribution of the hash values is a fundamental requirement of a hash function. 
+- non-uniform increases number of collisions and the cost of resolving them.
+- uniformity can be evaluated by pearson's chi squared test.
+- distribution needs to be uniform only for table szes that occur in the application. in particular, if one uses dynamic resizing with the exact doubling and halving of the table size, hash function needs to be uniform only when the size is a power of two. Some other hashing algo prefer to have the size to be a prime number.
+
+### Search algo
+
+2 parts: first part is computing a hash function which transforms the search key into an array index. second is collision resolution.
+
+#### separate chaining
+
+- building a linked list with key-value pair for each search array index.
+- 
+
+#### open addressing
+
+- hash function should avoid clustering, the mapping of two or more keys to consecutive slots.
+- when a new entry has to be inserted, the buckets are examined, starting with the hased-to slot and proceeding in some probe sequence, until an unoccupied slot is found. when searching for an entry, the buckets are scanned in the same sequence, until either the target record is found, or an unused array slot is found, which indicates an unsuccessful search.
+  - linear probing, quadratic, double hashing
+
+
+segfault -> segmentation error. -> common cause -> operating over NULL, which is address zero, no permissions. 
