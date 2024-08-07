@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define STARTING_BUCKETS 8
-#define MAX_KEY_SIZE 128
+#define MAX_KEY_SIZE 32 // TODO remove this constraint
 
 // an array of linkedlist
 typedef uint32_t Hash;
@@ -31,6 +31,16 @@ Hashmap* Hashmap_new (void) {
 
 void Hashmap_free(Hashmap *h) {
   // TODO free all the node including string copies
+  Node *prior, *n;
+  for (int i = 0; i < h->num_buckets; i++) {
+    n = h->buckets[i];
+    while (n!= NULL){
+      prior = n;
+      n = n->next;
+      free(prior->key);
+      free(prior);
+    }
+  }
   free(h->buckets);
   free(h);
 };
@@ -52,34 +62,49 @@ void Hashmap_set(Hashmap *h, char *key, void* value){
   // n->hash = djb2(key);
   // h->buckets[n->hash % h->num_buckets]->next = n;
   // get hashkey first
-  Hash hashkey = djb2(key);
-  // initialise new node
-  Node* new_node = malloc(sizeof(Node));
-  new_node->key = strdup(key);
-  new_node->value = value;
-  new_node->hash = hashkey;
-  new_node->next = NULL;
-  Node* existing_node = h->buckets[hashkey % h->num_buckets];
-  // check if bucket is empty
-  if (existing_node == NULL) {
-    h->buckets[hashkey % h->num_buckets]= new_node;
-  } else {
-    // if not empty, traverse linked list to check for an existing key or to insert at the end
-    Node* prev = NULL;
-    while (existing_node != NULL) {
-      if (strcmp(existing_node->key, key) == 0) {
-        // key exists, update value
-        existing_node->value = value;
-        free(new_node->key);
-        free(new_node);
-        return;
-      }
-      prev = existing_node;
-      existing_node = existing_node->next;
+  Hash hash = djb2(key);
+  int i = hash % h->num_buckets;
+  Node *n = h->buckets[i];
+
+  while (n != NULL) {
+    if (n->hash == hash && strncmp(key, n->key, MAX_KEY_SIZE) == 0) {
+      n->value = value;
+      return;
     }
-    // key does not exist, insert the new node at the end of the list
-    prev->next = new_node;
+    n = n->next;
   }
+
+  n = malloc(sizeof(Node));
+  n->key = strdup(key);
+  n->value = value;
+  n->hash = hash;
+  n->next = h->buckets[i];
+  h->buckets[i] = n;  
+  // initialise new node
+  // Node* new_node = malloc(sizeof(Node));
+  // new_node->key = strdup(key);
+  // new_node->value = value;
+  // new_node->hash = hashkey;
+  // new_node->next = NULL;
+  // Node* existing_node = h->buckets[hashkey % h->num_buckets];
+  // // check if bucket is empty
+  // if (existing_node == NULL) {
+  //   h->buckets[hashkey % h->num_buckets]= new_node;
+  // } else {
+  //   // if not empty, traverse linked list to check for an existing key or to insert at the end
+  //   Node* prev = NULL;
+  //   while (existing_node != NULL) {
+  //     if (strncmp(existing_node->key, key, MAX_KEY_SIZE) == 0) {
+  //       // key exists, update value
+  //       existing_node->value = value;
+  //       return;
+  //     }
+  //     prev = existing_node;
+  //     existing_node = existing_node->next;
+  //   }
+  //   // key does not exist, insert the new node at the end of the list
+  //   prev->next = new_node;
+  // }
   // if no, next points to new node
   // if yes, existing node next points to new node
   
@@ -89,18 +114,41 @@ void* Hashmap_get(Hashmap *h, char *key){
   // TODO handle collision
   Hash hash = djb2(key);
   Node * n = h->buckets[hash % h->num_buckets]; 
-  if (n == NULL) 
-    return NULL;
-  return n->value;
-  //returns a node, get value from node
-};// value over null is segfault
 
-void Hashmap_delete(Hashmap *h, char *key){
-  int i = djb2(key) % h->num_buckets;
-  if (h->buckets[i] != NULL){
-    free(h->buckets[i]); // free the node
-    h->buckets[i] = NULL;
+  while (n != NULL) {
+      if (n->hash == hash && strncmp(n->key, key, MAX_KEY_SIZE) == 0) {
+        return n->value;
+      } 
+      n = n->next;
+  //returns a node, get value from node
+  }// value over null is segfault
+  return NULL;
+}
+
+void Hashmap_delete(Hashmap *h, char *key) {
+  Hash hash = djb2(key);
+  int i = hash % h->num_buckets;
+  Node *prior = NULL;
+  Node * n = h->buckets[i]; 
+
+  while (n != NULL) {
+    if (n->hash == hash && strncmp(n->key, key, MAX_KEY_SIZE) == 0){
+      if (prior == NULL) {
+        h->buckets[i] = n->next;
+      } else {
+        prior->next = n->next;
+      }
+      free(n->key);
+      free(n);
+      return;
+    }
+    prior = n;
+    n = n->next;
   }
+  // if (h->buckets[hash % h->num_buckets] != NULL && strcmp(n->key, key) == 0){
+  //   free(h->buckets[i]); // free the node
+  //   h->buckets[i] = NULL;
+  // }
   // TODO if there's nothing there, free NULL. only free if not null.
 }
 
@@ -123,24 +171,24 @@ int main() {
 
   // basic delete functionality
   Hashmap_delete(h, "item a");
-  // printf("%p", Hashmap_get(h, "item a"));
+  // // printf("%p", Hashmap_get(h, "item a"));
   assert(Hashmap_get(h, "item a") == NULL);
 
-  /*
-  // handle collisions correctly
-  // note: this doesn't necessarily test expansion
-  int i, n = STARTING_BUCKETS * 10, ns[n];
-  char key[MAX_KEY_SIZE];
-  for (i = 0; i < n; i++) {
-    ns[i] = i;
-    sprintf(key, "item %d", i);
-    Hashmap_set(h, key, &ns[i]);
-  }
-  for (i = 0; i < n; i++) {
-    sprintf(key, "item %d", i);
-    assert(Hashmap_get(h, key) == &ns[i]);
-  }
-  */
+  
+  // // handle collisions correctly
+  // // note: this doesn't necessarily test expansion
+  // int i, n = STARTING_BUCKETS * 10, ns[n];
+  // char key[MAX_KEY_SIZE];
+  // for (i = 0; i < n; i++) {
+  //   ns[i] = i;
+  //   sprintf(key, "item %d", i);
+  //   Hashmap_set(h, key, &ns[i]);
+  // }
+  // for (i = 0; i < n; i++) {
+  //   sprintf(key, "item %d", i);
+  //   assert(Hashmap_get(h, key) == &ns[i]);
+  // }
+  
 
   Hashmap_free(h);
   /*
