@@ -304,3 +304,7 @@ ld hello.o -o hello -macosx_version_min 11.0 -L /Library/Developer/CommandLineTo
 [] when you're working with a memory address rather than the value stored in a register or a direct value. brackets tell the assembler that you want to access the memory at the address contained in a register, rather than using the value directly as an operand
 
 - bracket means you are dealing with a memory location, not just a value. contains an address in memory, 
+
+### Brief tour of LLDB
+
+- for step through debugging

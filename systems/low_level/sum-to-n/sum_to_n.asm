@@ -26,6 +26,6 @@ global sum_to_n
 sum_to_n:
 	lea rax, [rdi + 1] ; load effective address to add 1 to rdi, reuslt stored in rax
 	; computes effective address second operate and stores it in the first
-	imul rax, rdi
-	sar rax, 1
+	imul rax, rdi ; imul is signed multiplication
+	sar rax, 1 ; sar is arithmetic shift right
 	ret
