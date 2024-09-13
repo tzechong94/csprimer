@@ -239,3 +239,59 @@ void insert_tree(tree **l, item_type x, tree *parent) {
     }
 }
 ```
+
+## Lecture 6: Hashing
+
+- reading in n numbers and then printing them out in sorted order. suppose you have access to a balanced dictionary data structure, which supports each of the operations search, nsert, delete, mininum, maximum, succesor and predecessor in log n time.
+- explain how you can use this dictionary to sort in n log n time using only the following abstract operations: minimum, successor, insert and search
+
+### Hash tables
+
+- maintain a dictionary with O(1)
+- hash function maps keys to integers
+  
+#### Collisions
+
+set of keys mapped to the same bucket. if keys are uniformly distributed, each bucket should contain v few keys. short lists are easily searched.
+
+- exemplified by birthday paradox
+
+## Lecture 7: Heapsort/Priority Queues
+
+problem of the day:
+take as input a sequence of 2n real numbers. Design an O(n log n) algo that partitions the numbers into n pairs, with the property that the partition minimizes the maximum sum of the a pair.
+For example, say we are given the numbers (1,3,5,9). the possible partitions are ((1,3),(5,9)), ((1,5),(3,9)) and ((1,9),(3,5)). the pair sums for these partitions are (4,14), (6,12) and (10,8). Thus the third partition has 10 as its maximum sum, which is the minimum over the three partitions.
+
+### importance of sorting (n lg n)
+
+#### Efficiency
+
+- sorting is important because it makes other problems easy
+- application of sorting: searching, eg binary search (lg n), closest pair (n), element uniqueness, mode, median and selection
+- convex hull: given n points in two dimensions, find the smallest area polygon which contains them all.
+  - once you have the points sorted by x-coordinate, they can be inserted from left to right into the hull, since the rightmost is always on the boundary.
+
+### Selection sort / heapsort
+
+#### selection sort
+
+- scans through the entire array, repeated finding the smallest remaining element. n^2 if use arrays or unsorted linked lists.
+- data structure matters. using balanced search trees or heaps, both of these operatoins can be done within lg n, for an n log n selection sort called heapsort.
+
+#### priority queues
+
+provide extra flexibility over sorting
+
+- insert
+- find min/max
+- delete min/max
+- each of these can be supported using heaps or balanced binary trees in O(log n)
+
+#### Heap definition
+
+defined ot be a binary tree with a key in each node such that:
+
+- all elaves are on, at most, two adjacent levels
+- all leaves on the lowest level occur to the left, and all levels excpt the lowest one are completed filled
+- the key in root is <= all its children, and the left and right subtrees are again binary heaps.
+- children of node i = 2i and 2i + 1
