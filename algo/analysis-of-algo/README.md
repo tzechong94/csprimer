@@ -295,3 +295,62 @@ defined ot be a binary tree with a key in each node such that:
 - all leaves on the lowest level occur to the left, and all levels excpt the lowest one are completed filled
 - the key in root is <= all its children, and the left and right subtrees are again binary heaps.
 - children of node i = 2i and 2i + 1
+
+## Lecture 8: Mergesort / quicksort
+
+- heap -> priority queue. insert new log n, delete log n, find min in constant time
+
+problem of the day:
+give an efficient algorithm to determine whether two sets (of size m and n) are disjoint. Analyze the complexity of your algorithm in terms of m and n. Be sure to consider the case where m is substantially smaller than n. disjoint -> no element in common.
+
+n >= m
+
+- build hash table (n + m) expected time
+- build binary search tree
+- merge sort
+
+mergesort -> sort half half O(lg n) then merge (n)
+
+- recursive algo are based on reducing large problems into small ones
+- nice recursive approach to sorting involves partitioning the lements into two groups, sorting each of the smaller problems recursively, and then interleaving the two sorted lists to totally order the elements.
+
+merging sorted lists -> two pointer technique O(n)
+
+- divide and conquer
+  - merging takes less time than solving the two subproblems, we get an efficient algo
+
+Quicksort
+
+-> in practice, the fastest internal sorting algo is quicksort, which uses partitioning as its main idea.
+-> pick a pivot, pivot ends up in the correct place
+
+partitioning
+
+- we can partition an array about the pivot in one linear scan, by maintaining three sections, < pivot, > pivot and unexplored.
+- as we scan from left to right, we move the left bound to the right when the element is less than the pivot, otherwise we swap it with the rightmost unexplored element and move the right bound one step clsoer to the left. n lg n best case if pivot is median everytime. worst case n^2
+
+## lecture 9. linear sort
+
+- nuts and bolts problem. You are given a collection of n bolts of different widths, and n corresponding nuts. you can test whether a given nut and bolt together, from which you learn whether the nut is too large, too small, or an exact match for the bolt. the differences in size between pair of nuts or bolts can be too small to see by eye, so you cannot rely on comparing the sizes of two nuts or two bolts directly. you are to match each bolt to each nut.
+
+lower bound analysis
+
+since any two different permutations of n elements requires a different sequence of steps to sort, there must be at least n! different paths from the root to leaves in the decision tree. Thus there must be at least n! different leaves in this binary tree. 
+Since a binary tree of height h has at most 2^h leaves, we know n! <= 2^h, or h >= lg(n!). By inspection n! > (n/2)^(n/2) since the last n/2 terms of the product are each greater than /2. 
+
+comparison sort -> n lg n best
+
+Non-comparison based sorting
+
+- initialize data structure, incrementing each bucket as you go along (n+k)
+
+Bucketsort
+
+- suppose we are sorting n numbers from 1 to m, where we know the numbers are approximately uniformly distributed. We can set up n buckets, each responsible for an interval m/n numbers from 1 to m.
+- given an input number x, it belongs in bucket [xn/m]
+- if we use an array of buckets, each item gets mapped to the right bucket in O(1) time. worst case all same bucket.
+
+non-comparison sorts dont beat the bound.
+
+## Lecture 10: Graph data structures
+
