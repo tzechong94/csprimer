@@ -354,3 +354,52 @@ non-comparison sorts dont beat the bound.
 
 ## Lecture 10: Graph data structures
 
+matching parenthesis -> use stack. left one push, right one pop. check if match.
+
+h-index problem
+
+intro to graphs (nodes and lines / vertices and edges)
+
+- graph G = (V,E) is defined by a set of vertices V, and a set of edges E consisting of ordered or unordered pairs of vertices from V.
+- vertex are points where two or more line segments or edges meet
+
+flavors of graph -> learning the language to talk about the graph
+
+### directed vs undirected
+
+- a graph G = (V,E) is undirected if edge (x,y) E implies that (y,x) is also in E.
+- road networks between cities are typically undirected (two way)
+- street networks within cities are directed because of one way streets
+
+### weighted vs unweighted graphs
+
+- each edge of G is assigned a numerical value or weight
+- edges of a road network graph might be weighted with their length, drive time or speed limit
+- in unweighted graphs, there is no cost distinction between various edges and vertices
+
+### Simple vs non-simple
+
+- self loop is an edge (x,x) involving only one vertex
+- an edge (x,y) is a multi-edge if it occurs more than once in the graph. -> more than one way to get from A to B. More than 1 road / multiple ways you know someone.
+- any graph which avoids these structures is called simple / graph with these structures is called non-simple
+
+### Sparse vs dense
+
+- sparse when only a small fraction of the possible number of vertex pairs have edges defined between them
+- graphs are usually sparse due to application-specific constraints. Road networks must be sparse because of road junctions.
+- typically dense graphs have a quadratic number of edges while sparse graphs are linear in size.
+
+### Data structures for graph: 
+
+adjacency matrix 
+adjacency lists -> n x 1 array of pointers, where the ith element points to a linked list of the edges incident on vertex i.
+
+- to test if edge (i,j) is in the graph we search the ith list for j, which takes O(di), where di is the degree of the ith vertex. 
+
+faster to test if (x,y) exists? matrix
+faster to find vertex degree? lists
+less memory on small graphs? lists (m + n) vs n^2
+less memory on big graphs? matrices (small win)
+edge insertion or deletion? matrics O(1)
+faster to traverse the graph? lists m+n vs n^2
+better for most problems? lists
