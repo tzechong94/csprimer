@@ -249,7 +249,7 @@ void insert_tree(tree **l, item_type x, tree *parent) {
 
 - maintain a dictionary with O(1)
 - hash function maps keys to integers
-  
+
 #### Collisions
 
 set of keys mapped to the same bucket. if keys are uniformly distributed, each bucket should contain v few keys. short lists are easily searched.
@@ -335,8 +335,8 @@ partitioning
 
 lower bound analysis
 
-since any two different permutations of n elements requires a different sequence of steps to sort, there must be at least n! different paths from the root to leaves in the decision tree. Thus there must be at least n! different leaves in this binary tree. 
-Since a binary tree of height h has at most 2^h leaves, we know n! <= 2^h, or h >= lg(n!). By inspection n! > (n/2)^(n/2) since the last n/2 terms of the product are each greater than /2. 
+since any two different permutations of n elements requires a different sequence of steps to sort, there must be at least n! different paths from the root to leaves in the decision tree. Thus there must be at least n! different leaves in this binary tree.
+Since a binary tree of height h has at most 2^h leaves, we know n! <= 2^h, or h >= lg(n!). By inspection n! > (n/2)^(n/2) since the last n/2 terms of the product are each greater than /2.
 
 comparison sort -> n lg n best
 
@@ -389,12 +389,12 @@ flavors of graph -> learning the language to talk about the graph
 - graphs are usually sparse due to application-specific constraints. Road networks must be sparse because of road junctions.
 - typically dense graphs have a quadratic number of edges while sparse graphs are linear in size.
 
-### Data structures for graph: 
+### Data structures for graph
 
-adjacency matrix 
+adjacency matrix
 adjacency lists -> n x 1 array of pointers, where the ith element points to a linked list of the edges incident on vertex i.
 
-- to test if edge (i,j) is in the graph we search the ith list for j, which takes O(di), where di is the degree of the ith vertex. 
+- to test if edge (i,j) is in the graph we search the ith list for j, which takes O(di), where di is the degree of the ith vertex.
 
 faster to test if (x,y) exists? matrix
 faster to find vertex degree? lists
@@ -403,3 +403,91 @@ less memory on big graphs? matrices (small win)
 edge insertion or deletion? matrics O(1)
 faster to traverse the graph? lists m+n vs n^2
 better for most problems? lists
+
+## Lecture 11: Graph traversal
+
+edges in adjacency lists
+
+```c
+typedef struct edgenode {
+    int y;
+    int weight;
+    struct edgenode \*next;
+} edgenode;
+```
+
+graph representation
+
+```c
+typedef struct graph{
+    edgenode *edges[MAXV+1];
+    int degree[MAXV+i];
+    int nvertices;
+    int nedges;
+    int directed;
+} graph
+```
+
+1. convert from an adjacency matrix to adjacency lists
+
+for i from 1 to n, for j from 1 to m, if m[i,j] = 1, add edge (i,j) to adjacency list. n^2 to search, constant time to add.
+
+2. list to matrix -> n + 2m. for undirected.
+
+traversing a graph
+
+- for efficiency we must make sure we visit each edge at most twice
+- for correctness, we must do the traversal in a systematic way so that we don't miss anything
+- since a maze is just a graph, such an algo must be powerful enough to enable us to get out of an arbitrary maze.
+
+marking vertices 
+
+- mark each vertex when we first visit it, and keep track of what have not yet been completely explored
+- each vertex will always be in one of the following three states:
+  - undiscovered - initial virgin state
+  - discovered - after we have encountered it, but before we have checked out its incident edges
+  - processed - vertex after we have visited all its incident edges
+
+to do list
+
+- we must maintain a structure containing all the vertices we have discovered but not yet completely explored
+- initially only a single start vertex is considered to be discovered
+- to completely explore a vertex, we look at each edge going out of it. for each edge which goes to an undiscovered vertex, we mark is discovered and add it to the list of work to do.
+- regardless of what order we fetch the next vertex to explore, each edge is considered exactly twice, when each of its endpoints are explored.
+
+correctness of graph traversal
+
+- every edge and vertex in the connected component is eventually visited.
+- suppose not, i.e there exists a vertex which was unvisited whose neighbour was visited. this neighbour will eventually be explored so we would visit it.
+
+### Bread-first traversal
+
+- visit every vertex and every edge exactly once in some well defined order. appropriate in shortest paths on unweighted graphs
+- data structures:
+  - use two boolean arrays
+    - a vertex is discovered the first time we visit it
+    - a vertex is considered processed after we have traversed all outgoing edges
+    - once a vertex is discovered, it is placed on a FIFO queue. Thus oldest vertices/closest to the root are expanded first.
+    - keep track of parent too
+ 
+ n+2m too
+
+finding paths
+
+- parent array set within bfs() is very useful for finding interesting paths through a graph. the vertex which discovered vertex i is defined as parent[i]. the parent relation defines a tree of discovery with the initial search node as the root of the tree.
+
+shortest paths and bfs
+
+- in bfs, vertices are discovered in order of increasing distance from the root, so this tree has a very important property.
+- unique tree path from root to any node uses the smallest number of edges possible on any root to x path in the graph.
+
+recusion and path finding
+
+- reconstruct this path by following chain of ancestors from x to the root. work backwards. cannot find path from root to x since that does not follow the direction of parent pointers. we must find the path from x to the root.
+
+connected components.
+
+- separate pieces of the graph such that there is no connection between the pieces.
+- loop through all vertex, in case there are separate components, do a bfs for each vertex
+- O(n(n+m))
+
