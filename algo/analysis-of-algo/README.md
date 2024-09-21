@@ -491,3 +491,31 @@ connected components.
 - loop through all vertex, in case there are separate components, do a bfs for each vertex
 - O(n(n+m))
 
+## Lecture 12: Depth first traversal
+
+- bipartite graph -> vertex colornig problem seeks to assign a label to each vertex of a graph such that no edge links any two vertices of the same colour. bipartite if it can be colored without conflicts while using only two colors. 
+- consider graph of students and the courses they are registered for. no edges go btween student pairs or course pairs.
+
+- finding a two coloring
+  - we can augment bread-first search so that whenver we disocver a new vertex, we color it the opposite of its parent.
+
+problem of the day
+
+- prove that in a breadth first search on an undirected graph G, every edge in G is either a tree edge or a cross edge, where a cross edge (x,y) is an edge where x is neither an ancestor or descendent of y.
+
+depth first search has a neat recursive implementation which eliminates the need to explicitly use a stack.
+
+- tree edge, forward edge, back and cross edges
+- Dfs: tree edges and back edges only
+- bfs: tree or cross only
+
+articulation vertex -> connected graph
+
+- iff v is not a leaf and some subtree of v has no back edge incident until a proper ancestor of v
+- topological sorting
+- a directed, acyclic graph has no directed cycles
+- ordering on the vertices so that all edges go from left to right.
+- DAGs has at least one topological sort
+- a directed graph is a dag iff no back edges are encountered during a depth first search
+- labeling each of the vertices in the reverse order that they are marked processed finds a topological sort of a DAG.
+- push each vertex on a stack soon as we have evaluated all outgoing edges, the top vertex on the stack always has no incoming edges from any vertex on the stack, repeatedly popping them off yields a topological ordering

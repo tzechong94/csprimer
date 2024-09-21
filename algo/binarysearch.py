@@ -2,7 +2,12 @@
 # if number is not in the array, return false
 
 
-def binary_search(n, arr):
+from random import randint
+import timeit
+from matplotlib import pyplot
+
+
+def binsearch(arr, n):
     # base case: if array len is 0, returns false
     # if array len is 1 && element is not n, returns false
     # if array len is more than 1, pick n/2 and use it as index. if n == element return index,
@@ -17,82 +22,31 @@ def binary_search(n, arr):
         mid_value = arr[mid]
 
         if mid_value == n:
-            print("low: ", low, "high: ", high, "mid: ", mid)
-            print("Found")
+
             return mid
 
         elif n > mid_value:
-            print("low: ", low, "high: ", high, "mid: ", mid)
             low = mid + 1
         else:
-            print("low: ", low, "high: ", high, "mid: ", mid)
             high = mid - 1
 
-    return False
+    return None
 
 
-# def binsearch(nums, n):
-#     """
-#     let lo, high, be 0 and len(nums)... then we know, if n is
-#     in nums, then it must be in [lo,hi]
-#     while hi > lo:
-
-#         mid = (lo + hi)//2
-#         x = nums[mid]
-#         if x == n:
-#             return mid
-#         if n < x:
-#             hi = mid
-#         if n > x:
-#             lo = mid + 1
-
-#     """
-#     pass
+def itersearch(nums, n):
+    for i, x in enumerate(nums):
+        if n == x:
+            return i
+    return None
 
 
 if __name__ == "__main__":
-    array = [
-        103,
-        191,
-        217,
-        227,
-        253,
-        337,
-        340,
-        394,
-        417,
-        507,
-        533,
-        560,
-        608,
-        621,
-        716,
-        764,
-        771,
-        833,
-        865,
-        923,
-    ]
-    for i, x in enumerate(array):
-        assert binary_search(x, array) == i
+    sizes = range(200)
+    bintiming, itertiming = [], []
+    for size in sizes:
+        nums = sorted(randint(0, 10000) for _ in range(size))  # [0,size]
+        bintiming.append(timeit.timeit(lambda: binsearch(nums, 42), number=3))
+        itertiming.append(timeit.timeit(lambda: itersearch(nums, 42), number=3))
 
-    # assert binary_search(5, array) == False
-    # assert binary_search(-5, array) == False
-
-    # a = (0, 1, 3, 4)
-    # b = (-5, -2, 0)
-    # cases = (
-    #     (a, 0, 0),
-    #     (a, 1, 1),
-    #     (a, 3, 2),
-    #     (a, 4, 3),
-    #     (b, -5, 0),
-    #     (b, -2, 1),
-    #     (b, 0, 2),
-    #     (a, 2, None),
-    #     (b, -3, None),
-    # )
-    # for nums, n, exp in cases:
-    #     assert binsearch(nums, n) == exp
-
-    print("ok")
+    pyplot.plot(sizes, bintiming, itertiming)
+    pyplot.show()

@@ -2,23 +2,12 @@ import time
 
 
 def fizzbuzz_sum_constant(n):
-    # n // 15 = a
-    # n // 5 = b
-    # n // 3 = c
-    # triangular number = n*(n+1)/2
-    # sum = 5*triangular + 3*triangular - 15*triangular
     a = (n - 1) // 15
-    # print("a", a)
     b = (n - 1) // 5
-    # print("b", b)
     c = (n - 1) // 3
-    # print("c", c)
     triangular_a = triangular(a)
-    # print("triangular_a", triangular_a)
     triangular_b = triangular(b)
-    # print("triangular_b", triangular_b)
     triangular_c = triangular(c)
-    # print("triangular_c", triangular_c)
     return 5 * triangular_b + 3 * triangular_c - 15 * triangular_a
 
 
@@ -27,6 +16,7 @@ def triangular(n):
 
 
 def fizzbuzz_sum_linear(n):
+    
     sum = 0
     for i in range(1, n):
         if i % 5 == 0 and i % 3 != 0:
