@@ -69,3 +69,6 @@ convex hull
 
 - points can only be at 1 end of the line
 -  
+
+## WATCH
+ls processtree.py | entr -r sh -c 'ps -o pid,ppid,args | python3 processtree.py'
