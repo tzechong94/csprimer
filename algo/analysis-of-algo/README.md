@@ -291,7 +291,7 @@ provide extra flexibility over sorting
 
 defined ot be a binary tree with a key in each node such that:
 
-- all elaves are on, at most, two adjacent levels
+- all leaves are on, at most, two adjacent levels
 - all leaves on the lowest level occur to the left, and all levels excpt the lowest one are completed filled
 - the key in root is <= all its children, and the left and right subtrees are again binary heaps.
 - children of node i = 2i and 2i + 1
@@ -519,3 +519,72 @@ articulation vertex -> connected graph
 - a directed graph is a dag iff no back edges are encountered during a depth first search
 - labeling each of the vertices in the reverse order that they are marked processed finds a topological sort of a DAG.
 - push each vertex on a stack soon as we have evaluated all outgoing edges, the top vertex on the stack always has no incoming edges from any vertex on the stack, repeatedly popping them off yields a topological ordering
+
+## Lecture 13 minimum spanning trees
+
+Topological sorting by indegree-0 node removal
+
+- kahn's algorithm (BFS based)
+
+1. input: a DAG represented by an adjacency list or matrix
+2. calculate in-degrees
+3. enqueue nodes with 0 in-degree
+4. process the graph:
+   1. repeatedly remove nodes with 0 in degree, append them to the result list, and reduce the in degree of their neighbours by 1
+   2. if any neighbour's in degree becomes 0, enqueue it
+5. check for cycles
+   1. if all nodes are processed, graph is acyclic and topological sort is valid
+   2. else it contains a cycle, no valid order exists
+
+DFS- based algo
+
+1. DAG represented by adjacency list or matrix
+2. marked nodes as visited
+   1. perform DFS traversal starting from any unvisited node. mark the node as visited when you start
+3. once all neighbours are visited, add the node to a stack. This ensures that when a node is added, all its dependencies have already been added to the stack
+4. pop nodes from stack. once DFS is complete, the nodes in the stack represent the topologically sorted order
+
+Problem of the day
+arrange n rambunctious kids in a straight line, facing front. you are given a list of m statements of the form 'i hates j' if i hates j, do not want to put i somewhere behind j, because i is capable of throwing something at j.
+
+1. give an algorithm that orders the line, or says it is not possible in O(m+n) time.
+   1. complement of undirected graph -> all the edges that are not present in the original graph
+
+topologically sort it, then reverse
+
+2. suppose instead you want to arrange the kids in rows, such that if i hates j then i must be in a lower numbered row than j. Give an efficient algorithm to find the minimum number of rows needed, if it is possible.
+
+- take out in-degree 0 and add to rows
+
+minimum spanning trees
+
+- weighted graph algorithms
+
+spanning tree of a graph is a subgraph that includes all vertices of the original graph, and is a tree meaning it is connected and contains no cycles
+
+MST -> where the sum of the weights of its edges is minimized. In weighted graphs, (graphs where each edge has an associated cost or weight), the MST provides a way to connect all vertices with the minimum possible total edge weight.
+
+useful in constructing networks, by describing the way to connect a set of sites using the smallest total amount of wire.
+
+optimum traveling salesman tour is at most twice the length of the minimum spanning tree
+
+Prim's algorithm n^2
+
+- starts from one vertex, grows the rest of the tree an edge at a time
+- greedy algorithm -> looks locally to be the best thing
+- the cheapest edge with which can grow the tree by one vertex without creating a cycle
+
+1. select an arbitrary vertex s to start the tree from
+2. while (there are still non tree vertices)
+   1. pick min cost edge between tree/non-tree verticles
+   2. add the selected edge and vertex to the tree Tprim
+  
+is it correct? proof by contradiction
+
+Kruskal's algorithm n^2
+
+- sort all edges in increasing order by their weight
+- pick the smallest edge. if it forms a cycle with the already included edges in the MST, discard it. otherwise add it to the MST
+- repeat until MST contains V-1 edges
+- use a disjoint set data structure to efficiently check if adding an edge creates a cycle
+- also a greedy algo
