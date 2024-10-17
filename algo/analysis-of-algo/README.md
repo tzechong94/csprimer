@@ -581,6 +581,8 @@ Prim's algorithm n^2
   
 is it correct? proof by contradiction
 
+## Lecture 14 
+
 Kruskal's algorithm n^2
 
 - sort all edges in increasing order by their weight
@@ -588,3 +590,38 @@ Kruskal's algorithm n^2
 - repeat until MST contains V-1 edges
 - use a disjoint set data structure to efficiently check if adding an edge creates a cycle
 - also a greedy algo
+
+problem of the day
+
+- given the MST of a given graph with  n vertices and m edges and a new edge e of weight w that we will add to G
+- give an efficient algo to find the mst of the graph G + e. your algo should run in o(n) time to receive full credit
+
+dijkstra's algorithm
+
+- if (s,...,x...,t) is the shortest path from s to t, then (s,...x) had better be the shortest path from s to x.
+- This suggests a dynamic programming like strategy, where we store the distance from s to all nearby nodes, and use them to find the shortest path to more distant nodes.
+
+initialisation and update
+
+- shortest path from s to s is 0. if all edge weights are positive, the smallest edge incident incident to s, say (s,x) defines d(s,x)
+- soon as we establish the shortest path from s to a new node x, we go through each of its incident edges to see if there is a better way from s to other nodes thru x.
+
+## Lecture 15 
+
+Floyd's algorithm floyd-warshall -> shortest path from all pairs
+
+djikstra's -> shortest path from one point to another point
+
+d[i,j]^k = min(d[i,j]^k-1, d[i,k]^k-1 + d[k,j]^k-1)
+
+dynamic programming
+
+1. characterize the strutcure of an optimal solution
+2. recursively define the value of an optimal solution
+3. compute this recurrence in a bottom up fashion
+4. extract the optimal solution from computed information
+
+transitive closure
+
+- transitive closure C of a directed graph A adds edge (i,j) to C if there is a path from i to j in A.
+- 
